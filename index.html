@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>影视与视听节目策划案文库</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css">
+  <style>
+    /* 移动端与多端阅读体验增强 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.85;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .markdown-section {
+      max-width: 950px;
+      padding: 30px 25px 50px 25px;
+    }
+    /* 表格自适应，支持手机端横向滑动 */
+    .markdown-section table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    .markdown-section th, .markdown-section td {
+      border: 1px solid #e1e4e8;
+      padding: 10px 14px;
+    }
+    .sidebar {
+      font-size: 15px;
+    }
+    /* 引用块美化 */
+    .markdown-section blockquote {
+      border-left: 4px solid #42b983;
+      padding-left: 1rem;
+      margin-left: 0;
+      color: inherit;
+      opacity: 0.88;
+    }
+    /* 移动端菜单悬浮按钮优化 */
+    .sidebar-toggle {
+      bottom: 25px;
+      left: 25px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">正在加载策划案文库...</div>
+  <script>
+    window.$docsify = {
+      name: '🎬 策划案文库',
+      loadSidebar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      search: {
+        placeholder: '搜索策划案关键词...',
+        noData: '未找到相关内容',
+        depth: 4
+      },
+      copyCode: {
+        buttonText: '复制文本',
+        successText: '已复制'
+      }
+    };
+  </script>
+  <!-- 核心库与插件 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <!-- Mermaid 流程图插件 -->
+  <script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
+  <script>mermaid.initialize({ startOnLoad: true });</script>
+  <!-- 暗黑/明亮主题切换 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
+</body>
+</html>
