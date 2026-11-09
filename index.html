@@ -5,10 +5,13 @@
   <title>影视与视听节目策划案文库</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css">
+  <!-- 本地核心主题样式（离线可用，零外网依赖） -->
+  <link rel="stylesheet" href="vendor/vue.css">
   <style>
-    /* 移动端与多端阅读体验增强 */
+    /* 全局排版增强（自适应移动端与高清视网膜屏） */
+    :root {
+      --theme-color: #2c7be5;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "HarmonyOS Sans SC", "Microsoft YaHei", sans-serif;
       line-height: 1.85;
@@ -16,16 +19,17 @@
       -webkit-font-smoothing: antialiased;
     }
     .markdown-section {
-      max-width: 950px;
-      padding: 30px 25px 50px 25px;
+      max-width: 960px;
+      padding: 30px 25px 60px 25px;
     }
-    /* 表格自适应，支持手机端横向滑动 */
+    /* 表格自适应，保证手机端横向顺畅滑动 */
     .markdown-section table {
       display: block;
       width: 100%;
       overflow-x: auto;
       border-collapse: collapse;
       margin: 1.5rem 0;
+      -webkit-overflow-scrolling: touch;
     }
     .markdown-section th, .markdown-section td {
       border: 1px solid #e1e4e8;
@@ -34,24 +38,92 @@
     .sidebar {
       font-size: 15px;
     }
+    .sidebar-nav li strong {
+      color: #2c7be5;
+    }
     /* 引用块美化 */
     .markdown-section blockquote {
-      border-left: 4px solid #42b983;
-      padding-left: 1rem;
-      margin-left: 0;
-      color: inherit;
-      opacity: 0.88;
+      border-left: 4px solid #2c7be5;
+      padding: 10px 15px;
+      margin: 1.2rem 0;
+      background: rgba(44, 123, 229, 0.05);
+      border-radius: 0 4px 4px 0;
     }
-    /* 移动端菜单悬浮按钮优化 */
+    /* 移动端菜单悬浮按钮位置优化 */
     .sidebar-toggle {
       bottom: 25px;
-      left: 25px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      padding: 8px;
+    }
+    /* 暗黑护眼模式原生适配 */
+    body.dark-theme {
+      background-color: #12161a !important;
+      color: #c9d1d9 !important;
+    }
+    body.dark-theme .sidebar {
+      background-color: #161b22 !important;
+      color: #c9d1d9 !important;
+      border-right-color: #21262d !important;
+    }
+    body.dark-theme .sidebar-toggle {
+      background: rgba(22, 27, 34, 0.9);
+    }
+    body.dark-theme .markdown-section h1,
+    body.dark-theme .markdown-section h2,
+    body.dark-theme .markdown-section h3,
+    body.dark-theme .markdown-section strong {
+      color: #f0f6fc !important;
+    }
+    body.dark-theme .markdown-section table th,
+    body.dark-theme .markdown-section table td {
+      border-color: #30363d !important;
+      background-color: #161b22 !important;
+    }
+    body.dark-theme .markdown-section blockquote {
+      background: rgba(255, 255, 255, 0.05);
+      border-left-color: #58a6ff;
+    }
+    /* 悬浮暗黑模式切换按钮 */
+    #theme-toggle {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.25s ease;
+    }
+    body.dark-theme #theme-toggle {
+      background: rgba(30, 35, 45, 0.85);
+      border-color: #444;
+      color: #eee;
     }
   </style>
 </head>
 <body>
+  <button id="theme-toggle" onclick="toggleTheme()">🌓 切换暗黑</button>
   <div id="app">正在加载策划案文库...</div>
+
   <script>
+    // 暗黑模式切换与持久化
+    function toggleTheme() {
+      var isDark = document.body.classList.toggle('dark-theme');
+      localStorage.setItem('docsify-dark-theme', isDark ? 'true' : 'false');
+    }
+    if (localStorage.getItem('docsify-dark-theme') === 'true') {
+      document.body.classList.add('dark-theme');
+    }
+
+    // Docsify 全局配置
     window.$docsify = {
       name: '🎬 策划案文库',
       loadSidebar: true,
@@ -65,19 +137,38 @@
       copyCode: {
         buttonText: '复制文本',
         successText: '已复制'
-      }
+      },
+      markdown: {
+        renderer: {
+          code: function(code, lang) {
+            if (lang === "mermaid") {
+              return '<div class="mermaid">' + code + '</div>';
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.doneEach(function() {
+            if (window.mermaid) {
+              try {
+                mermaid.init(undefined, '.mermaid');
+              } catch(e) {
+                console.warn('Mermaid render warning:', e);
+              }
+            }
+          });
+        }
+      ]
     };
   </script>
-  <!-- 核心库与插件 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <!-- Mermaid 流程图插件 -->
-  <script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
-  <script>mermaid.initialize({ startOnLoad: true });</script>
-  <!-- 暗黑/明亮主题切换 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
+
+  <!-- 本地静态资源（无外网 CDN 阻塞风险） -->
+  <script src="vendor/docsify.min.js"></script>
+  <script src="vendor/search.min.js"></script>
+  <script src="vendor/docsify-copy-code.min.js"></script>
+  <script src="vendor/zoom-image.min.js"></script>
+  <script src="vendor/mermaid.min.js"></script>
 </body>
 </html>
